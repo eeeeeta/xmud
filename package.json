@@ -1,0 +1,29 @@
+{
+    "name": "xmud",
+    "version": "0.0.1",
+    "description": "a bad javascript mud",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+        "q": "*",
+        "ansi": "*"
+    },
+    "devDependencies": {
+        "mocha": "*"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/mocha --harmony"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/eeeeeta/xmud.git"
+    },
+    "author": "eeeeeta",
+    "license": "GPL",
+    "bugs": {
+        "url": "https://github.com/eeeeeta/xmud/issues"
+    },
+    "homepage": "https://github.com/eeeeeta/xmud"
+}
