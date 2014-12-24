@@ -27,7 +27,7 @@ var Ignore = function() {};
  * this handles - you guessed it - logins.
  * this object doesn't do much in the way of methods yet
  * 
- * @param {object} pm - a PlayerManager, for various nefarious purposes
+ * @param {PlayerManager} pm - a PlayerManager, for various nefarious purposes
  */
 LoginManager = function(PlayerManager) {
     PlayerManager.on('new', function(player) {
@@ -126,6 +126,10 @@ LoginManager = function(PlayerManager) {
                 return hash(answer, 12);
             }).then(function writePW(hash) {
                 player.data.hash = hash;
+                player.data.hp = 0;
+                player.data.xp = 0;
+                player.data.maxhp = 0;
+                player.data.level = 0;
                 return write(__dirname + '/pfiles/' + player.name.toLowerCase() + '.json', JSON.stringify(player.data));
             }).then(function() {
                 player.socket.write('\nPlayer creation successful! Welcome to the realm of xMUD!');

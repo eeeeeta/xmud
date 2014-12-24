@@ -114,4 +114,4 @@ PlayerManager.prototype.add = function(socket) {
     this.emit('new', player);
     return player;
 };
-module.exports = PlayerManager;
+module.exports = {PlayerManager: PlayerManager, Player: Player};

@@ -21,10 +21,12 @@ process.log = new winston.Logger({
 process.log.info('starting xMUD v0.1');
 process.log.info('too lazy to implement config, so i\'ll start the server on port 7000');
 
-var PlayerManager = require('./player.js');
+var PlayerManager = require('./player.js').PlayerManager;
 var pm = new PlayerManager();
 var LoginManager = require('./login.js');
 var lm = new LoginManager(pm);
+var REPLManager = require('./repl.js');
+var rm = new REPLManager(pm);
 
 net.createServer(function(sock) {
     let player = pm.add(sock); // ooh es6, how very exciting
