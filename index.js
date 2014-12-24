@@ -7,11 +7,19 @@
 var net = require('net'); // obviously
 var readline = require('readline');
 var fs = require('fs');
-var Q = require('q');
+var winston = require('winston');
 var motd = 'no motd';
 
-console.log('starting xMUD v0.1');
-console.log('too lazy to implement config, so i\'ll start the server on port 7000');
+// warning: horrible sin ahead
+process.log = new winston.Logger({
+    transports: [
+        new winston.transports.Console()
+    ]
+}); // :O
+// told you this was the worst ;)
+
+process.log.info('starting xMUD v0.1');
+process.log.info('too lazy to implement config, so i\'ll start the server on port 7000');
 
 var PlayerManager = require('./player.js');
 var pm = new PlayerManager();
@@ -20,7 +28,7 @@ var lm = new LoginManager(pm);
 
 net.createServer(function(sock) {
     let player = pm.add(sock); // ooh es6, how very exciting
-    console.log('connect');
+    process.log.info('new connection from ' + sock.remoteAddress);
     // how very large and imposing!
     player.socket.write('██╗  ██╗███╗   ███╗██╗   ██╗██████╗\n');
     player.socket.write('╚██╗██╔╝████╗ ████║██║   ██║██╔══██╗\n');

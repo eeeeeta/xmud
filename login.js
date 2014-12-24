@@ -81,13 +81,14 @@ LoginManager = function(PlayerManager) {
                 return compare(pw, player.data.hash);
             }).then(function(auth) {
                 if (!auth) {
-                    console.log('Incorrect password.');
+                    process.log.warn('incorrect password provided for ' + player.name + ' from ' + player.host);
                     player.socket.write('\nIncorrect password!\n');
                     player.socket.end();
-                    throw new Error('Incorrect password provided.');
+                    throw new PlayerError('Incorrect password provided.');
                 }
                 else {
                     player.socket.write('\nCorrect. Welcome back!');
+                    process.log.info(player.name + ' logged in', {host: player.host});
                     player.emit('begin');
                 }
             }, function(thrown) {
@@ -98,7 +99,7 @@ LoginManager = function(PlayerManager) {
                     return;
                 }
                 else {
-                    console.log(thrown);
+                    process.log.error('error in login! ' + thrown.message, {stack: thrown.stack, host: player.host, name: player.name});
                     player.socket.write('\n\nAn unexpected error occurred. Please try again later.\n');
                     player.socket.end();
                 }
@@ -111,7 +112,7 @@ LoginManager = function(PlayerManager) {
                     throw new Error('Player creation canceled');
                 }
                 else {
-                    console.log('yay');
+                    process.log.info('starting signup for ' + player.name + '.', {host: player.host});
                     player.socket.write('Excellent, I\'ll create a file for ' + player.name + '.\n');
                     player.socket.write('\n\nPlease enter a password. Note that this password will be ');
                     player.socket.write('INSECURELY transmitted over the internet in an UNENCRYPTED form, so pick something unique');
@@ -130,7 +131,7 @@ LoginManager = function(PlayerManager) {
                 player.socket.write('\nPlayer creation successful! Welcome to the realm of xMUD!');
                 player.emit('begin');
             }, function(error) {
-                console.log('Signup: ' + error);
+                process.log.error('error in signup! ' + error.message, {stack: error.stack, host: player.host, name: player.name});
                 player.socket.write('An error occurred: ' + error.message + '.\n');
                 player.socket.end();
             });

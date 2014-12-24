@@ -72,6 +72,10 @@ Player = function(socket) {
      * is this player authenticated?
      */
     this.authed = false;
+    /**
+     * player's host
+     */
+    this.host = socket.remoteAddress;
     return this;
 };
 util.inherits(Player, EventEmitter);
@@ -88,7 +92,7 @@ PlayerManager.prototype.add = function(socket) {
     let player = new Player(socket);
     this.players.push(player);
     socket.on('end', function disconnectPlayer() {
-        console.log('disconnect');
+        process.log.info('lost connection from ' + player.host);
         /**
          * emitted when a player disconnects.
          * note: the player will remove all its listeners for you, so don't
