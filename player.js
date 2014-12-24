@@ -7,7 +7,7 @@ var readline = require('readline');
 var ansi = require('ansi');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
-var Q = require('q');
+var P = require('promise'); // ES6's promises are bad
 
 /**
  * create a new player manager
@@ -43,11 +43,11 @@ Player = function(socket) {
      * @returns {Promise<response>} resolves with the user's response
      */
     this.question = function(question) {
-        let promise = Q.defer(); // ooh, promises and es6 together, such new things
-        self.rl.question(question, function(answer) {
-            promise.resolve(answer);
+        return new P(function(resolve, reject) {
+            self.rl.question(question, function(answer) {
+                resolve(answer);
+            });
         });
-        return promise.promise; // yay logic
     };
     /**
      * ansi helper
@@ -55,7 +55,6 @@ Player = function(socket) {
     this.ansi = ansi(socket);
     /**
      * player's name
-     * null if not logged in
      */
     this.name = null;
     /**
@@ -65,6 +64,14 @@ Player = function(socket) {
         this.emit('quit');
         this.removeAllListeners();
     };
+    /**
+     * data about this player that we want to save
+     */
+    this.data = {};
+    /**
+     * is this player authenticated?
+     */
+    this.authed = false;
     return this;
 };
 util.inherits(Player, EventEmitter);
